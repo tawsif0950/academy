@@ -293,22 +293,47 @@ function initSearchOverlay() {
  */
 function initMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
     const navMenu = document.getElementById('navMenu');
+    
+    function openMenu() {
+        mobileMenuBtn.classList.add('active');
+        navMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeMenu() {
+        mobileMenuBtn.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    }
     
     if (mobileMenuBtn && navMenu) {
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.toggle('active');
-            navMenu.classList.toggle('active');
-            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+            if (navMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+        
+        // Close button
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMenu);
+        }
+        
+        // Close on overlay click
+        navMenu.addEventListener('click', (e) => {
+            if (e.target === navMenu) {
+                closeMenu();
+            }
         });
         
         // Close menu when clicking on a link
         const navLinks = navMenu.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                closeMenu();
             });
         });
     }
